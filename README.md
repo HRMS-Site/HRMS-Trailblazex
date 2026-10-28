@@ -49,4 +49,6 @@ Owned by the frontend developer. Setup instructions belong in `frontend/` once t
 
 ## Git
 
-Use feature branches (`feature/backend-*`, `feature/frontend-*`). Do not push directly to `main`.
+# Use feature branches (`feature/backend-*`, `feature/frontend-*`). Do not push directly to `main`.
+
+# HRMS-Trailblazex
