@@ -19,6 +19,8 @@ export interface Employee {
   department: string;
   job_title: string;
   status: EmployeeStatus;
+  salary?: number | string;
+  joining_date?: string;
 }
 
 export interface EmployeeWrite {
@@ -27,6 +29,8 @@ export interface EmployeeWrite {
   department: string;
   job_title: string;
   status: EmployeeStatus;
+  salary: number | string;
+  joining_date: string;
 }
 
 export interface Department {
@@ -151,7 +155,8 @@ export interface ProfitLossReport {
   end_date?: string;
   total_revenue: number | string;
   total_expenses: number | string;
-  net_profit: number | string;
+  net_profit?: number | string;
+  net_profit_loss?: number | string;
   profit_margin?: number | string | null;
   budget_utilization?: number | string | null;
   trends?: TrendPoint[];

@@ -145,7 +145,7 @@ export function DashboardPage() {
           <StatCard
             key="net"
             label="Net profit / loss"
-            value={formatCurrency(report?.net_profit)}
+            value={formatCurrency(report?.net_profit_loss ?? report?.net_profit)}
             icon={Scale}
             hint="From the report endpoint"
           />,

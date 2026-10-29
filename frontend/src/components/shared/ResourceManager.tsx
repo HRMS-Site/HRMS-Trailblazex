@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, type DefaultValues, type FieldValues, type Path } from "react-hook-form";
 import type { z } from "zod";
@@ -74,8 +73,21 @@ export function ResourceManager<T extends { id: number | string }, TSchema exten
   const [busy, setBusy] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const form = useForm<z.infer<TSchema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<any>({
+    resolver: async (values) => {
+      const result = schema.safeParse(values);
+      if (result.success) {
+        return { values: result.data, errors: {} };
+      }
+      return {
+        values: {},
+        errors: result.error.issues.reduce<Record<string, { type: string; message: string }>>((acc, issue) => {
+          const key = issue.path.length > 0 ? issue.path.join(".") : "_root";
+          acc[key] = { type: issue.code, message: issue.message };
+          return acc;
+        }, {}),
+      };
+    },
     defaultValues: defaults,
   });
 

@@ -2,6 +2,7 @@ import { ArrowRight, BarChart3, BriefcaseBusiness, CalendarCheck2, CheckCircle2,
 import { Link } from "react-router-dom";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { isMockApiEnabled } from "@/lib/env";
 
 const features = [
   {
@@ -50,41 +51,31 @@ const reasons = [
   "Responsive design for different devices",
 ];
 
-const metrics = [
-  { label: "Total employees", value: "1,248" },
-  { label: "Today's attendance", value: "94.2%" },
-  { label: "Pending leave", value: "12" },
-];
-
-const teamActivity = [
-  { name: "Alicia Morris", status: "Checked in", time: "08:45 AM" },
-  { name: "Liam Green", status: "Leave approved", time: "Yesterday" },
-  { name: "Nina Patel", status: "Updated profile", time: "2 hours ago" },
-];
-
 export function HomePage() {
+  const ctaHref = isMockApiEnabled() ? "/login" : "/dashboard";
+
   return (
     <PublicLayout>
       <section className="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.14),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(139,92,246,0.14),transparent_30%)]">
-        <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.04fr_0.96fr] lg:px-8 lg:py-24">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:gap-8 lg:px-8 lg:py-24">
           <ScrollReveal className="flex flex-col justify-center" delay={80}>
             <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-sky-200 bg-white px-3 py-2 text-sm font-medium text-sky-700 shadow-sm">
               <Zap className="h-4 w-4" />
               Smarter HR. Better Workplaces.
             </div>
-            <h1 className="max-w-xl text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-[620px] text-[clamp(2.8rem,5vw,4.75rem)] font-black leading-[0.95] tracking-[-0.05em] text-slate-900">
               Simplify Your People Management.
             </h1>
-            <p className="mt-5 max-w-xl text-xl text-slate-600">
+            <p className="mt-5 max-w-[34rem] text-[clamp(1.05rem,1.6vw,1.25rem)] font-medium leading-7 text-slate-600">
               One platform. Every employee. Everything organized.
             </p>
-            <p className="mt-4 max-w-xl text-base leading-7 text-slate-600">
+            <p className="mt-4 max-w-[34rem] text-base leading-7 text-slate-600">
               Manage your workforce, streamline attendance, simplify leave requests, and bring your HR operations together with a smarter, more organized HRMS experience.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
-                to="/login"
+                to={ctaHref}
                 className="inline-flex items-center justify-center rounded-lg bg-sky-600 px-6 py-3 text-sm font-medium text-white transition hover:bg-sky-700"
               >
                 Get Started
@@ -99,94 +90,17 @@ export function HomePage() {
             </div>
           </ScrollReveal>
 
-          <ScrollReveal delay={140} className="relative">
+          <ScrollReveal delay={140} className="relative flex items-center justify-center lg:justify-end">
             <div className="absolute -left-8 top-10 h-28 w-28 rounded-full bg-violet-200/60 blur-3xl" />
             <div className="absolute -right-8 bottom-10 h-28 w-28 rounded-full bg-sky-200/80 blur-3xl" />
 
-            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_20px_70px_rgba(15,23,42,0.14)]">
-              <div className="mb-4 flex items-center justify-between rounded-2xl bg-slate-50 p-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Overview</p>
-                  <h2 className="mt-1 text-xl font-semibold text-slate-900">Workforce snapshot</h2>
-                </div>
-                <div className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
-                  Live view
-                </div>
-              </div>
-
-              <div className="mb-4 grid gap-3 sm:grid-cols-3">
-                {metrics.map((metric) => (
-                  <div key={metric.label} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                    <p className="text-xs text-slate-500">{metric.label}</p>
-                    <p className="mt-2 text-xl font-semibold text-slate-900">{metric.value}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="mb-4 flex items-center justify-between">
-                    <p className="text-sm font-semibold text-slate-700">Attendance overview</p>
-                    <span className="text-xs text-slate-500">This week</span>
-                  </div>
-                  <div className="flex h-32 items-end gap-2">
-                    {[52, 58, 68, 72, 82, 88, 94].map((height, index) => (
-                      <div key={height} className="flex-1 rounded-t-xl bg-linear-to-t from-sky-500 to-violet-500" style={{ height: `${height}%`, opacity: 0.55 + index * 0.06 }} />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <p className="text-xs text-slate-500">Pending requests</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900">12</p>
-                    <p className="mt-1 text-xs text-amber-600">4 require approval</p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <p className="text-xs text-slate-500">Department coverage</p>
-                    <div className="mt-3 space-y-2">
-                      {[
-                        ["Engineering", "88%"],
-                        ["Sales", "92%"],
-                        ["Operations", "81%"],
-                      ].map(([name, value]) => (
-                        <div key={name}>
-                          <div className="mb-1 flex items-center justify-between text-[11px] text-slate-600">
-                            <span>{name}</span>
-                            <span>{value}</span>
-                          </div>
-                          <div className="h-2 rounded-full bg-slate-200">
-                            <div className="h-2 rounded-full bg-sky-500" style={{ width: value }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-slate-700">Recent employee activity</p>
-                  <span className="text-xs text-slate-500">Updated today</span>
-                </div>
-                <div className="space-y-3">
-                  {teamActivity.map((item) => (
-                    <div key={item.name} className="flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2 shadow-sm">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-100 text-sm font-medium text-sky-700">
-                          {item.name.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-slate-800">{item.name}</p>
-                          <p className="text-xs text-slate-500">{item.status}</p>
-                        </div>
-                      </div>
-                      <span className="text-xs text-slate-500">{item.time}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="relative w-full max-w-[720px] overflow-hidden rounded-[28px] bg-transparent">
+              <img
+                src="/Modern HR Dashboard Teamwork Illustration.png"
+                alt="HRMS dashboard illustration showing teamwork and people management"
+                className="block h-auto w-full object-contain"
+                style={{ width: "100%", height: "auto", objectFit: "contain" }}
+              />
             </div>
           </ScrollReveal>
         </div>

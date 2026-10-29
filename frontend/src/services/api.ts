@@ -52,9 +52,18 @@ export const http = axios.create({
 
 http.interceptors.request.use((config) => {
   config.baseURL = getApiBaseUrl();
+  if (config.data && typeof config.data === "object" && !(config.data instanceof FormData)) {
+    config.headers = {
+      ...(config.headers ?? {}),
+      "Content-Type": "application/json",
+    } as typeof config.headers;
+  }
   const token = sessionStorage.getItem("hrms.accessToken");
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers = {
+      ...(config.headers ?? {}),
+      Authorization: `Bearer ${token}`,
+    } as typeof config.headers;
   }
   return config;
 });
@@ -65,6 +74,9 @@ export async function apiRequest<T>(path: string, init: AxiosRequestConfig = {})
       url: path,
       ...init,
     });
+    if (response.status === 204) {
+      return undefined as T;
+    }
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {

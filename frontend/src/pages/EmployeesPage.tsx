@@ -11,7 +11,15 @@ export function EmployeesPage() {
       entityName="employee"
       description="Maintain the employee directory. Client checks are for usability; the backend is the authority."
       schema={employeeSchema}
-      defaults={{ name: "", email: "", department: "", job_title: "", status: "active" }}
+      defaults={{
+        name: "",
+        email: "",
+        department: "",
+        job_title: "",
+        salary: 0,
+        joining_date: "",
+        status: "active",
+      }}
       list={listEmployees}
       create={createEmployee}
       update={updateEmployee}
@@ -24,6 +32,8 @@ export function EmployeesPage() {
         { name: "email", label: "Email", type: "email" },
         { name: "department", label: "Department", type: "text" },
         { name: "job_title", label: "Job title", type: "text" },
+        { name: "salary", label: "Salary", type: "number", step: "0.01" },
+        { name: "joining_date", label: "Joining date", type: "date" },
         {
           name: "status",
           label: "Status",

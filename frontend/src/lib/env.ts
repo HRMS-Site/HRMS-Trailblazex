@@ -1,4 +1,4 @@
-export const DEFAULT_API_BASE_URL = "http://localhost:8000/api/v1";
+export const DEFAULT_API_BASE_URL = "https://hrms-trailblazex.onrender.com/api/v1";
 
 export function getApiBaseUrl(): string {
   const configured = import.meta.env.VITE_API_BASE_URL?.trim();

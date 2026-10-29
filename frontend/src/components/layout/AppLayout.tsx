@@ -7,7 +7,6 @@ import {
   CalendarCheck,
   CalendarOff,
   LayoutDashboard,
-  Menu,
   Scale,
   Users,
   Wallet,

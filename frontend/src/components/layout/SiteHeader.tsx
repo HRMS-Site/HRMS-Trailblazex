@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
+import { isMockApiEnabled } from "@/lib/env";
 
 const NAV_ITEMS = [
   { to: "/", label: "Home" },
@@ -17,6 +18,7 @@ export function SiteHeader({
   onSignOut?: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const ctaHref = isMockApiEnabled() ? "/login" : "/dashboard";
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-6 z-50 flex justify-center px-4">
@@ -101,7 +103,7 @@ export function SiteHeader({
 
           {showCta ? (
             <Link
-              to="/login"
+              to={ctaHref}
               className="absolute right-3 hidden items-center gap-2 rounded-full bg-linear-to-r from-sky-600 to-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_25px_rgba(59,130,246,0.28)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_28px_rgba(59,130,246,0.3)] md:inline-flex"
             >
               Get Started
@@ -152,7 +154,7 @@ export function SiteHeader({
               ))}
               {showCta ? (
                 <Link
-                  to="/login"
+                  to={ctaHref}
                   onClick={() => setOpen(false)}
                   className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-sky-600 to-violet-600 px-4 py-2.5 text-sm font-semibold text-white"
                 >

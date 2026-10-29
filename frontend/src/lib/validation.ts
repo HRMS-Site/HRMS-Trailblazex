@@ -8,6 +8,8 @@ export const employeeSchema = z.object({
   email: z.string().trim().email("Enter a valid email."),
   department: z.string().trim().min(2, "Department is required."),
   job_title: z.string().trim().min(2, "Job title is required."),
+  salary: z.coerce.number().positive("Salary must be greater than zero."),
+  joining_date: z.string().min(1, "Joining date is required."),
   status: z.enum(["active", "inactive"]),
 });
 

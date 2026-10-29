@@ -32,7 +32,7 @@ describe("DashboardPage", () => {
       end_date: "2026-10-27",
       total_revenue: 1000,
       total_expenses: 400,
-      net_profit: 600,
+      net_profit_loss: 600,
       profit_margin: 60,
       budget_utilization: 20,
       trends: [{ period: "2026-10", revenue: 1000, expenses: 400 }],

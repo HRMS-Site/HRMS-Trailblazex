@@ -50,6 +50,14 @@ export function AboutPage() {
               <p className="mt-4 text-base leading-7 text-slate-600">
                 Trailblazex HRMS is built to help organizations simplify routine HR activities through a clean digital experience. It brings employee information, attendance activity, leave tracking, and staffing visibility into one place so teams can focus more on people and less on manual admin work.
               </p>
+              <ul className="mt-6 space-y-3 text-sm text-slate-600">
+                {purposePoints.map((point) => (
+                  <li key={point} className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 text-sky-600" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </ScrollReveal>
 

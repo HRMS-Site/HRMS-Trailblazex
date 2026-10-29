@@ -9,7 +9,15 @@ import type {
 } from "@/types";
 
 /** Sample records for UI development only. Not live Trailblazex company data. */
-export const mockStore = {
+export const mockStore: {
+  employees: Employee[];
+  departments: Department[];
+  transactions: Transaction[];
+  payroll: PayrollRecord[];
+  attendance: AttendanceRecord[];
+  leave: LeaveRecord[];
+  budgets: BudgetRecord[];
+} = {
   employees: [
     {
       id: 1,

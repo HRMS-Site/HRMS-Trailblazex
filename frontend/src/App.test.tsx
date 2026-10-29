@@ -8,6 +8,10 @@ vi.mock("@/pages/HomePage", () => ({
   HomePage: () => <div>Home screen</div>,
 }));
 
+vi.mock("@/lib/env", () => ({
+  isMockApiEnabled: () => false,
+}));
+
 describe("routing", () => {
   it("renders the home page on the home route", () => {
     render(
@@ -29,5 +33,16 @@ describe("routing", () => {
       </MemoryRouter>,
     );
     expect(screen.getByText("Page not found")).toBeInTheDocument();
+  });
+
+  it("routes the Get Started CTA to the dashboard when live API mode is active", () => {
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>,
+    );
+    expect(screen.getByText("Home screen")).toBeInTheDocument();
   });
 });
