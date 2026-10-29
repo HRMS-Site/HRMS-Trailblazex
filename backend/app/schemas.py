@@ -74,15 +74,53 @@ class DashboardOut(BaseModel):
         return f"{value:.2f}"
 
 
+class TrendPointOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    period: str
+    revenue: Decimal
+    expenses: Decimal
+
+    @field_serializer("revenue", "expenses")
+    def serialize_money(self, value: Decimal) -> str:
+        return f"{value:.2f}"
+
+
+class DepartmentSummaryOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    department: str
+    revenue: Decimal
+    expenses: Decimal
+    net_profit: Decimal
+
+    @field_serializer("revenue", "expenses", "net_profit")
+    def serialize_money(self, value: Decimal) -> str:
+        return f"{value:.2f}"
+
+
 class ProfitLossOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     start_date: date
     end_date: date
     total_revenue: Decimal
     total_expenses: Decimal
     net_profit_loss: Decimal
+    net_profit: Decimal
+    profit_margin: Decimal | None = None
+    budget_utilization: Decimal | None = None
+    trends: list[TrendPointOut] = Field(default_factory=list)
+    department_summaries: list[DepartmentSummaryOut] = Field(default_factory=list)
 
-    @field_serializer("total_revenue", "total_expenses", "net_profit_loss")
+    @field_serializer("total_revenue", "total_expenses", "net_profit_loss", "net_profit")
     def serialize_money(self, value: Decimal) -> str:
+        return f"{value:.2f}"
+
+    @field_serializer("profit_margin", "budget_utilization")
+    def serialize_optional_percent(self, value: Decimal | None) -> str | None:
+        if value is None:
+            return None
         return f"{value:.2f}"
 
 
