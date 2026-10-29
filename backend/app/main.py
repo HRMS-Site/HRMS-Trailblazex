@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -22,17 +23,30 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Explicit allowed origins
+ALLOWED_ORIGINS = [
+    "https://hrms-trailblazex.vercel.app",
+    "https://hrms-trailblazex.vercel.app/",
+    "http://localhost:5176",
+    "http://127.0.0.1:5176",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5177",
+    "http://127.0.0.1:5177",
+]
+
+# Allow extending via environment variable if configured in deployment settings
+_env_origins = os.getenv("ALLOWED_ORIGINS") or os.getenv("CORS_ORIGINS")
+if _env_origins:
+    for _origin in _env_origins.split(","):
+        _clean = _origin.strip()
+        if _clean and _clean not in ALLOWED_ORIGINS:
+            ALLOWED_ORIGINS.append(_clean)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://hrms-trailblazex.vercel.app",
-        "http://localhost:5176",
-        "http://127.0.0.1:5176",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5177",
-        "http://127.0.0.1:5177",
-    ],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"^https:\/\/hrms-trailblazex(-[a-z0-9-]+)?\.vercel\.app\/?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
