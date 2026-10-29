@@ -25,6 +25,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://hrms-trailblazex.vercel.app",
         "http://localhost:5176",
         "http://127.0.0.1:5176",
         "http://localhost:5173",
