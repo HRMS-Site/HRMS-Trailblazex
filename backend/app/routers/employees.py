@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Employee
-from app.schemas import EmployeeCreate, EmployeeOut
+from app.schemas import EmployeeCreate, EmployeeOut, EmployeeUpdate
 
 router = APIRouter(prefix="/employees", tags=["employees"])
 
@@ -36,6 +36,34 @@ def get_employee(employee_id: int, db: Session = Depends(get_db)) -> Employee:
     employee = db.get(Employee, employee_id)
     if employee is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employee not found.")
+    return employee
+
+
+@router.put("/{employee_id}", response_model=EmployeeOut)
+@router.patch("/{employee_id}", response_model=EmployeeOut)
+def update_employee(
+    employee_id: int,
+    payload: EmployeeUpdate,
+    db: Session = Depends(get_db),
+) -> Employee:
+    employee = db.get(Employee, employee_id)
+    if employee is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employee not found.")
+
+    update_data = payload.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(employee, field, value)
+
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="An employee with this email already exists.",
+        ) from None
+
+    db.refresh(employee)
     return employee
 
 

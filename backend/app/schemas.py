@@ -1,17 +1,17 @@
 from datetime import date
 from decimal import Decimal
-from typing import Annotated
+from typing import Annotated, Any
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_serializer
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_serializer, model_validator
 
-from app.models import ApprovalStatus, AttendanceStatus, PayrollStatus, TransactionType
+from app.models import ApprovalStatus, AttendanceStatus, EmployeeStatus, PayrollStatus, TransactionType
 
 Money = Annotated[Decimal, Field(gt=0, max_digits=14, decimal_places=2)]
 MoneyOrZero = Annotated[Decimal, Field(ge=0, max_digits=14, decimal_places=2)]
 
 
 # ---------------------------------------------------------------------------
-# Existing schemas — unchanged
+# Employee schemas
 # ---------------------------------------------------------------------------
 
 
@@ -22,6 +22,33 @@ class EmployeeCreate(BaseModel):
     job_title: str = Field(..., min_length=1, max_length=120)
     salary: Money
     joining_date: date
+    status: EmployeeStatus = EmployeeStatus.active
+
+    @model_validator(mode="before")
+    @classmethod
+    def populate_full_name(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "full_name" not in data and "name" in data:
+                data["full_name"] = data["name"]
+        return data
+
+
+class EmployeeUpdate(BaseModel):
+    full_name: str | None = Field(default=None, min_length=1, max_length=200)
+    email: EmailStr | None = None
+    department: str | None = Field(default=None, min_length=1, max_length=120)
+    job_title: str | None = Field(default=None, min_length=1, max_length=120)
+    salary: Money | None = None
+    joining_date: date | None = None
+    status: EmployeeStatus | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def populate_full_name(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "full_name" not in data and "name" in data:
+                data["full_name"] = data["name"]
+        return data
 
 
 class EmployeeOut(BaseModel):
@@ -34,10 +61,16 @@ class EmployeeOut(BaseModel):
     job_title: str
     salary: Decimal
     joining_date: date
+    status: EmployeeStatus = EmployeeStatus.active
 
     @field_serializer("salary")
     def serialize_salary(self, value: Decimal) -> str:
         return f"{value:.2f}"
+
+
+# ---------------------------------------------------------------------------
+# Finance & Dashboard schemas
+# ---------------------------------------------------------------------------
 
 
 class TransactionCreate(BaseModel):

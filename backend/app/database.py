@@ -1,3 +1,4 @@
+import logging
 import os
 from collections.abc import Generator
 
@@ -5,6 +6,8 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 from sqlalchemy.pool import StaticPool
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -58,5 +61,18 @@ def get_db() -> Generator[Session, None, None]:
 
 def init_db() -> None:
     from app import models  # noqa: F401
+    from sqlalchemy import text
+    from sqlalchemy.exc import SQLAlchemyError
 
     Base.metadata.create_all(bind=engine)
+    if not DATABASE_URL.startswith("sqlite"):
+        try:
+            with engine.begin() as conn:
+                conn.execute(
+                    text("ALTER TABLE employees ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'active' NOT NULL")
+                )
+        except SQLAlchemyError as exc:
+            logger.error("Failed to ensure employees.status column in database: %s", exc, exc_info=True)
+            raise RuntimeError(
+                f"Database migration failed: could not ensure 'status' column on 'employees' table. Error: {exc}"
+            ) from exc

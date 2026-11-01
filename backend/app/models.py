@@ -18,6 +18,11 @@ class TransactionType(str, enum.Enum):
     expense = "expense"
 
 
+class EmployeeStatus(str, enum.Enum):
+    active = "active"
+    inactive = "inactive"
+
+
 class PayrollStatus(str, enum.Enum):
     draft = "draft"
     processed = "processed"
@@ -52,6 +57,12 @@ class Employee(Base):
     job_title: Mapped[str] = mapped_column(String(120), nullable=False)
     salary: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
     joining_date: Mapped[date] = mapped_column(Date, nullable=False)
+    status: Mapped[EmployeeStatus] = mapped_column(
+        Enum(EmployeeStatus, name="employee_status", native_enum=False),
+        nullable=False,
+        default=EmployeeStatus.active,
+        server_default="active",
+    )
 
 
 class Transaction(Base):

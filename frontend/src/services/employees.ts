@@ -24,6 +24,8 @@ function normalizeEmployee(record: Record<string, unknown>): Employee {
     department: String(record.department ?? ""),
     job_title: String(record.job_title ?? ""),
     status,
+    salary: typeof record.salary === "number" || typeof record.salary === "string" ? record.salary : undefined,
+    joining_date: typeof record.joining_date === "string" ? record.joining_date : undefined,
   };
 }
 
@@ -35,6 +37,7 @@ function toBackendEmployee(body: EmployeeWrite) {
     job_title: body.job_title,
     salary: Number(body.salary).toFixed(2),
     joining_date: body.joining_date,
+    status: body.status,
   };
 }
 
@@ -62,7 +65,11 @@ export async function updateEmployee(id: number | string, body: EmployeeWrite): 
   if (isMockApiEnabled()) {
     return mockUpdateEmployee(id, body);
   }
-  throw new Error("Employee updates are not supported by the current backend API.");
+  const updated = await apiRequest<Record<string, unknown>>(`${PATH}/${id}`, {
+    method: "PUT",
+    data: toBackendEmployee(body),
+  });
+  return normalizeEmployee(updated);
 }
 
 export async function deleteEmployee(id: number | string): Promise<void> {
