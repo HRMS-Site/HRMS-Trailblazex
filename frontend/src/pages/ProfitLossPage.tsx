@@ -27,7 +27,7 @@ function formatPercent(value: number | string | null | undefined): string {
 }
 
 export function ProfitLossPage() {
-  const { preset, setPreset, custom, setCustom, range } = useDateFilter();
+  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, range } = useDateFilter();
   const [report, setReport] = useState<ProfitLossReport | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,10 +75,10 @@ export function ProfitLossPage() {
 
       <div className="mb-6">
         <DateRangeSelector
-          preset={preset}
-          custom={custom}
-          onPresetChange={setPreset}
-          onCustomChange={setCustom}
+          year={selectedYear}
+          month={selectedMonth}
+          onYearChange={setSelectedYear}
+          onMonthChange={setSelectedMonth}
         />
       </div>
 

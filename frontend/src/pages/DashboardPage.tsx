@@ -39,7 +39,7 @@ function formatPercent(value: number | string | null | undefined): string {
 }
 
 export function DashboardPage() {
-  const { preset, setPreset, custom, setCustom, range } = useDateFilter();
+  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, range } = useDateFilter();
   const [employeeCount, setEmployeeCount] = useState<number | null>(null);
   const [report, setReport] = useState<ProfitLossReport | null>(null);
   const [loading, setLoading] = useState(true);
@@ -109,10 +109,10 @@ export function DashboardPage() {
       <ScrollReveal delay={80}>
         <div className="mb-6">
           <DateRangeSelector
-            preset={preset}
-            custom={custom}
-            onPresetChange={setPreset}
-            onCustomChange={setCustom}
+            year={selectedYear}
+            month={selectedMonth}
+            onYearChange={setSelectedYear}
+            onMonthChange={setSelectedMonth}
           />
         </div>
       </ScrollReveal>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveDateRange } from "@/lib/dateRange";
+import { buildMonthDateRange, resolveDateRange } from "@/lib/dateRange";
 
 const now = new Date(2026, 9, 27);
 
@@ -35,5 +35,11 @@ describe("resolveDateRange", () => {
   it("keeps a custom range", () => {
     const custom = { start: "2026-02-01", end: "2026-02-28" };
     expect(resolveDateRange("custom", custom, now)).toEqual(custom);
+  });
+
+  it("builds inclusive month ranges with leap-year February handling", () => {
+    expect(buildMonthDateRange(2024, 2)).toEqual({ start: "2024-02-01", end: "2024-02-29" });
+    expect(buildMonthDateRange(2026, 11)).toEqual({ start: "2026-11-01", end: "2026-11-30" });
+    expect(buildMonthDateRange(2026, 4)).toEqual({ start: "2026-04-01", end: "2026-04-30" });
   });
 });
