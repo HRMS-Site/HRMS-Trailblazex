@@ -125,7 +125,7 @@ export function DashboardPage() {
         </ScrollReveal>
       ))}
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mb-6 grid grid-cols-2 items-stretch gap-3 sm:gap-4 xl:grid-cols-3">
         {[
           <StatCard key="employees" label="Total employees" value={formatInteger(employeeCount)} icon={Users} />,
           <StatCard

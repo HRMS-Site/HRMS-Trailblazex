@@ -10,14 +10,14 @@ export function SearchFilterBar({
   placeholder?: string;
 }) {
   return (
-    <div className="mb-4">
+    <div className="mb-4 w-full max-w-full">
       <Input
         type="search"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="max-w-sm"
+        className="w-full max-w-full sm:max-w-sm"
       />
     </div>
   );

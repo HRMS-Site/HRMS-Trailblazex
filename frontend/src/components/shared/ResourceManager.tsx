@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { BriefcaseBusiness, Building2, Mail, ShieldCheck, User, X } from "lucide-react";
 import { useForm, type DefaultValues, type FieldValues, type Path } from "react-hook-form";
 import type { z } from "zod";
 import { AlertMessage } from "@/components/AlertMessage";
@@ -44,6 +45,8 @@ export function ResourceManager<T extends { id: number | string }, TSchema exten
   searchKeys,
   emptyTitle,
   emptyDescription,
+  renderActions,
+  detailFields,
 }: {
   title: string;
   entityName: string;
@@ -59,6 +62,8 @@ export function ResourceManager<T extends { id: number | string }, TSchema exten
   searchKeys: (row: T) => string[];
   emptyTitle: string;
   emptyDescription: string;
+  renderActions?: (row: T, actions: { onView: () => void; onEdit: () => void; onDelete: () => void }) => ReactNode;
+  detailFields?: (row: T) => { label: string; value: ReactNode }[];
 }) {
   const { user } = useAuth();
   const allowMutate = canMutate(user?.role) || !user;
@@ -72,6 +77,7 @@ export function ResourceManager<T extends { id: number | string }, TSchema exten
   const [pendingDelete, setPendingDelete] = useState<T | null>(null);
   const [busy, setBusy] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [viewing, setViewing] = useState<T | null>(null);
 
   const form = useForm<any>({
     resolver: async (values) => {
@@ -182,27 +188,35 @@ export function ResourceManager<T extends { id: number | string }, TSchema exten
           {
             key: "actions",
             header: "Actions",
-            render: (row: T) => (
-              <div className="flex gap-3">
-                <button type="button" className="text-sm font-medium text-sky-700 hover:underline" onClick={() => openEdit(row)}>
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  className="text-sm font-medium text-red-700 hover:underline"
-                  onClick={() => setPendingDelete(row)}
-                >
-                  Delete
-                </button>
-              </div>
-            ),
+            className: "w-[18%] min-w-[90px] pr-2 text-right",
+            render: (row: T) =>
+              renderActions ? (
+                <div className="flex justify-end pr-1">{renderActions(row, {
+                  onView: () => setViewing(row),
+                  onEdit: () => openEdit(row),
+                  onDelete: () => setPendingDelete(row),
+                })}</div>
+              ) : (
+                <div className="flex justify-end gap-3 pr-1">
+                  <button type="button" className="text-sm font-medium text-sky-700 hover:underline" onClick={() => openEdit(row)}>
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="text-sm font-medium text-red-700 hover:underline"
+                    onClick={() => setPendingDelete(row)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              ),
           } satisfies Column<T>,
         ]
       : []),
   ];
 
   return (
-    <div>
+    <div className="w-full overflow-visible">
       <PageHeader
         title={title}
         description={description}
@@ -269,13 +283,80 @@ export function ResourceManager<T extends { id: number | string }, TSchema exten
       <ConfirmDialog
         open={Boolean(pendingDelete)}
         title={`Delete ${entityName.toLowerCase()}`}
-        description="This action cannot be undone. The backend remains the authority for whether the record is removed."
+        description={
+          pendingDelete && "name" in pendingDelete
+            ? `Delete ${String((pendingDelete as { name?: string }).name ?? entityName.toLowerCase())}? This action cannot be undone.`
+            : "This action cannot be undone. The backend remains the authority for whether the record is removed."
+        }
         busy={busy}
         onCancel={() => setPendingDelete(null)}
         onConfirm={() => {
           void handleDelete();
         }}
       />
+      {viewing ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/45 p-3 sm:p-4">
+          <button type="button" className="absolute inset-0" aria-label="Close employee details" onClick={() => setViewing(null)} />
+          <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 sm:px-5 sm:py-4">
+              <h2 className="text-[16px] font-semibold text-slate-900">Employee Details</h2>
+              <button
+                type="button"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
+                aria-label="Close employee details"
+                onClick={() => setViewing(null)}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="grid gap-0 md:grid-cols-[220px_minmax(0,1fr)]">
+              <div className="border-b border-slate-200 px-4 py-5 text-center md:border-b-0 md:border-r md:px-5">
+                <div className="flex flex-col items-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-sky-100 text-lg font-semibold text-sky-700">
+                    {String((viewing as { name?: string }).name ?? "?").split(" ").slice(0, 2).map((part) => part[0] ?? "").join("").toUpperCase() || "?"}
+                  </div>
+                  <p className="mt-3 text-[15px] font-semibold text-slate-900">{String((viewing as { name?: string }).name ?? "Unknown")}</p>
+                  <div className="mt-3">
+                    {String((viewing as { status?: string }).status ?? "active").toLowerCase() === "active" ? (
+                      <span className="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-900">Active</span>
+                    ) : (
+                      <span className="inline-flex rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-800">Inactive</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="min-w-0 px-4 py-4 sm:px-5">
+                <div className="space-y-2.5">
+                  {(detailFields ? detailFields(viewing) : [{ label: "Name", value: String((viewing as { name?: string }).name ?? "") }]).map((field, index) => {
+                    const label = String(field.label).toLowerCase();
+                    const icon = label.includes("email")
+                      ? <Mail className="h-3.5 w-3.5" />
+                      : label.includes("job")
+                        ? <BriefcaseBusiness className="h-3.5 w-3.5" />
+                        : label.includes("department")
+                          ? <Building2 className="h-3.5 w-3.5" />
+                          : label.includes("status")
+                            ? <ShieldCheck className="h-3.5 w-3.5" />
+                            : <User className="h-3.5 w-3.5" />;
+
+                    return (
+                      <div key={field.label ?? index} className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5">
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white text-slate-600 shadow-sm">{icon}</div>
+                        <div className="flex min-w-0 flex-1 items-center gap-3">
+                          <p className="w-24 shrink-0 text-[12px] font-semibold uppercase tracking-[0.04em] text-slate-500">{field.label}</p>
+                          <div className="min-w-0 flex-1 text-[12.5px] leading-5 text-slate-800">{field.value}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -59,31 +59,31 @@ export function HomePage() {
       <section className="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.14),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(139,92,246,0.14),transparent_30%)]">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:gap-8 lg:px-8 lg:py-24">
           <ScrollReveal className="flex flex-col justify-center" delay={80}>
-            <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-sky-200 bg-white px-3 py-2 text-sm font-medium text-sky-700 shadow-sm">
-              <Zap className="h-4 w-4" />
+            <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-sky-200 bg-white px-3 py-2 text-[11px] font-medium text-sky-700 shadow-sm sm:mb-6 sm:text-sm">
+              <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Smarter HR. Better Workplaces.
             </div>
-            <h1 className="max-w-[620px] text-[clamp(2.8rem,5vw,4.75rem)] font-black leading-[0.95] tracking-[-0.05em] text-slate-900">
+            <h1 className="max-w-[620px] text-[2.2rem] font-black leading-[1.02] tracking-[-0.05em] text-slate-900 sm:text-[clamp(2.8rem,5vw,4.75rem)]">
               Simplify Your People Management.
             </h1>
-            <p className="mt-5 max-w-[34rem] text-[clamp(1.05rem,1.6vw,1.25rem)] font-medium leading-7 text-slate-600">
+            <p className="mt-4 max-w-[34rem] text-[0.98rem] font-medium leading-6 text-slate-600 sm:mt-5 sm:text-[clamp(1.05rem,1.6vw,1.25rem)] sm:leading-7">
               One platform. Every employee. Everything organized.
             </p>
-            <p className="mt-4 max-w-[34rem] text-base leading-7 text-slate-600">
+            <p className="mt-3 max-w-[34rem] text-sm leading-6 text-slate-600 sm:mt-4 sm:text-base sm:leading-7">
               Manage your workforce, streamline attendance, simplify leave requests, and bring your HR operations together with a smarter, more organized HRMS experience.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row">
               <Link
                 to={ctaHref}
-                className="inline-flex items-center justify-center rounded-lg bg-sky-600 px-6 py-3 text-sm font-medium text-white transition hover:bg-sky-700"
+                className="inline-flex w-full items-center justify-center rounded-xl bg-linear-to-r from-sky-600 to-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_25px_rgba(59,130,246,0.22)] transition hover:shadow-[0_16px_28px_rgba(59,130,246,0.28)] sm:w-auto"
               >
                 Get Started
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <a
                 href="#features"
-                className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 sm:w-auto"
               >
                 Explore Features
               </a>

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   Banknote,
   BarChart3,
@@ -60,12 +60,40 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
 
 export function AppLayout() {
   const [open, setOpen] = useState(false);
+  const location = useLocation();
   const { user, logout, requiresLogin } = useAuth();
   const showSignOut = Boolean(user || requiresLogin);
 
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.body.style.overflow = open ? "hidden" : "";
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [open]);
+
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader showCta={false} showSignOut={showSignOut} onSignOut={logout} />
+      <SiteHeader
+        showCta={false}
+        showSignOut={showSignOut}
+        onSignOut={logout}
+        onMobileMenuToggle={() => setOpen((value) => !value)}
+        mobileMenuOpen={open}
+        showDashboardMenu
+      />
 
       <div className="flex min-h-screen pt-20 lg:pt-24">
         <aside className="hidden bg-sidebar text-sidebar-foreground lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col">
@@ -83,15 +111,28 @@ export function AppLayout() {
 
         {open ? (
           <div className="fixed inset-0 z-40 lg:hidden">
-            <button type="button" className="absolute inset-0 bg-black/40" aria-label="Close menu" onClick={() => setOpen(false)} />
-            <aside className="relative z-50 h-full w-64 overflow-y-auto bg-sidebar p-4 text-sidebar-foreground">
-              <div className="mb-4 flex items-center justify-between">
-                <p className="text-sm font-semibold text-white">Trailblazex</p>
-                <button type="button" className="rounded-md p-1 text-slate-300 hover:bg-white/10" aria-label="Close menu" onClick={() => setOpen(false)}>
+            <button type="button" className="absolute inset-0 bg-black/40" aria-label="Close navigation menu" onClick={() => setOpen(false)} />
+            <aside
+              className="relative z-50 flex h-full w-[82vw] max-w-[280px] flex-col overflow-y-auto bg-sidebar p-4 text-sidebar-foreground shadow-2xl"
+              aria-label="Mobile sidebar navigation"
+            >
+              <div className="mb-4 flex items-center justify-between gap-3 pt-1">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-sky-400" aria-hidden />
+                  <p className="text-sm font-semibold text-white">Trailblazex</p>
+                </div>
+                <button
+                  type="button"
+                  className="rounded-md p-1.5 text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                  aria-label="Close navigation menu"
+                  onClick={() => setOpen(false)}
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
-              <NavItems onNavigate={() => setOpen(false)} />
+              <div className="flex-1 overflow-y-auto pb-4">
+                <NavItems onNavigate={() => setOpen(false)} />
+              </div>
             </aside>
           </div>
         ) : null}
