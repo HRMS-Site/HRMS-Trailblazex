@@ -92,15 +92,15 @@ export function ProfitLossPage() {
 
       {!loading && report ? (
         <>
-          <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard label="Revenue" value={formatCurrency(report.total_revenue)} icon={Banknote} />
-            <StatCard label="Expenses" value={formatCurrency(report.total_expenses)} icon={Wallet} />
+          <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+            <StatCard label="Total Revenue" value={formatCurrency(report.total_revenue)} icon={Banknote} />
+            <StatCard label="Total Expense" value={formatCurrency(report.total_expenses)} icon={Wallet} />
             <StatCard
-              label="Net profit / loss"
+              label="Net Profit"
               value={formatCurrency(report.net_profit_loss ?? report.net_profit)}
               icon={Scale}
             />
-            <StatCard label="Profit margin" value={formatPercent(report.profit_margin)} icon={Percent} />
+            <StatCard label="Profit Margin" value={formatPercent(report.profit_margin)} icon={Percent} />
           </div>
           <DataTable
             columns={[

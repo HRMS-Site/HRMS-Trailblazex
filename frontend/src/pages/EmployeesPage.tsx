@@ -129,7 +129,7 @@ function EmployeeActionsMenu({
     : null;
 
   return (
-    <div className="flex justify-end pr-1.5">
+    <div className="flex w-full justify-end pr-0.5 lg:pr-1.5">
       <button
         ref={buttonRef}
         type="button"
@@ -188,29 +188,53 @@ export function EmployeesPage() {
       columns={[
         {
           key: "name",
-          header: "Name",
-          className: "w-[42%] min-w-0 pl-1.5",
-          render: (row) => (
-            <div className="flex min-w-0 items-center">
-              <span
-                className="min-w-0 text-[13px] font-medium leading-5 text-slate-800 break-words"
-                style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
-              >
-                {row.name}
-              </span>
-            </div>
-          ),
+          header: <span className="block pl-1.5">Name</span>,
+          headerClassName: "w-[26%]",
+          className: "w-[26%] min-w-0 pl-1.5 align-middle",
+          render: (row) => {
+            const initials = String(row.name ?? "?")
+              .trim()
+              .split(/\s+/)
+              .filter(Boolean)
+              .slice(0, 2)
+              .map((part) => part[0]?.toUpperCase() ?? "")
+              .join("") || "?";
+
+            return (
+              <div className="flex min-w-0 items-center gap-2.5">
+                <div className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[11px] font-semibold text-slate-700 lg:flex">
+                  {initials}
+                </div>
+                <div className="flex min-w-0 flex-col justify-center gap-0.5">
+                  <span
+                    className="min-w-0 text-[13px] font-semibold leading-5 text-slate-800 break-words lg:text-[16px]"
+                    style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
+                  >
+                    {row.name}
+                  </span>
+                  <span
+                    className="hidden min-w-0 text-[11px] leading-4 text-slate-500 lg:block lg:text-[12px]"
+                    style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
+                  >
+                    {row.email || "—"}
+                  </span>
+                </div>
+              </div>
+            );
+          },
         },
         {
           key: "department",
-          header: "Department",
-          className: "w-[24%] min-w-0 pl-1.5",
+          header: <span className="block pl-1.5">Department</span>,
+          headerClassName: "w-[26%]",
+          className: "w-[26%] min-w-0 pl-1.5 align-middle",
           render: (row) => <span className="block text-[13px] leading-5 text-slate-700">{row.department || "—"}</span>,
         },
         {
           key: "status",
-          header: "Status",
-          className: "w-[18%] min-w-0 pl-2",
+          header: <span className="block pl-1.5">Status</span>,
+          headerClassName: "w-[26%]",
+          className: "w-[26%] min-w-0 pl-1.5 align-middle",
           render: (row) => (
             <div className="flex items-center justify-start pl-1.5">
               <StatusBadge value={row.status} />

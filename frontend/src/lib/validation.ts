@@ -37,9 +37,17 @@ export const payrollSchema = z
     net_pay: moneyOrZero,
     status: z.enum(["draft", "processed", "paid"]),
   })
-  .refine((value) => value.period_start <= value.period_end, {
-    message: "Period start must be on or before period end.",
+  .refine((value) => value.period_start < value.period_end, {
+    message: "Period start must be earlier than period end.",
     path: ["period_end"],
+  })
+  .refine((value) => value.deductions <= value.gross_pay, {
+    message: "Deductions cannot exceed gross pay.",
+    path: ["deductions"],
+  })
+  .refine((value) => value.net_pay === Math.max(0, Number(value.gross_pay) - Number(value.deductions)), {
+    message: "Net pay must equal gross pay minus deductions.",
+    path: ["net_pay"],
   });
 
 export const attendanceSchema = z.object({

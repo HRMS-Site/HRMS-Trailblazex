@@ -56,7 +56,7 @@ describe("EmployeesPage", () => {
     expect(screen.getByText("Department")).toBeInTheDocument();
     expect(screen.getByText("Status")).toBeInTheDocument();
     expect(screen.getByText("Actions")).toBeInTheDocument();
-    expect(screen.queryByText("Email")).not.toBeInTheDocument();
+    expect(screen.getByText("rahul.sharma@example.com")).toBeInTheDocument();
     expect(container.querySelector(".overflow-x-auto")).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: /actions for rahul sharma/i }));

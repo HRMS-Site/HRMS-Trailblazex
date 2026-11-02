@@ -4,7 +4,8 @@ import { LoadingState } from "@/components/LoadingState";
 
 export interface Column<T> {
   key: string;
-  header: string;
+  header: ReactNode;
+  headerClassName?: string;
   className?: string;
   render: (row: T) => ReactNode;
 }
@@ -38,7 +39,11 @@ export function DataTable<T>({
         <thead className="bg-slate-50 text-slate-600">
           <tr>
             {columns.map((column) => (
-              <th key={column.key} scope="col" className="px-2.5 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-slate-600">
+              <th
+                key={column.key}
+                scope="col"
+                className={`${column.headerClassName ?? ""} px-2.5 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-slate-600`}
+              >
                 {column.header}
               </th>
             ))}

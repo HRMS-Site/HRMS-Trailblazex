@@ -12,10 +12,13 @@ const PATH = "/transactions";
 
 export async function listTransactions(type?: Transaction["type"]): Promise<Transaction[]> {
   if (isMockApiEnabled()) {
-    return mockListTransactions(type);
+    const rows = await mockListTransactions();
+    return type ? rows.filter((row) => row.type === type) : rows;
   }
+
   const query = toQueryString({ type });
-  return unwrapList<Transaction>(await apiRequest<unknown>(`${PATH}${query}`));
+  const rows = unwrapList<Transaction>(await apiRequest<unknown>(`${PATH}${query}`));
+  return type ? rows.filter((row) => row.type === type) : rows;
 }
 
 export async function createTransaction(body: TransactionWrite): Promise<Transaction> {
