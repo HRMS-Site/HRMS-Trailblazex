@@ -5,7 +5,7 @@ FastAPI + SQLAlchemy + PostgreSQL API for employee records, revenue/expense tran
 ## Prerequisites
 
 - Python 3.11 or newer
-- PostgreSQL 14 or newer, running locally
+- PostgreSQL 14 or newer,
 
 Create a database and user (psql example — use your own password):
 
